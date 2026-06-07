@@ -1,0 +1,53 @@
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE || 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
+
+exports.sendEmail = async (to, subject, text, html) => {
+  try {
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to,
+      subject,
+            text,
+      html
+    });
+    console.log('Email envoyé:', info.response);
+    return true;
+  } catch (err) {
+    console.error('Erreur lors de l\'envoi d\'email:', err);
+    return false;
+  }
+};
+
+exports.sendWelcomeEmail = (email, nom) => {
+  const subject = 'Bienvenue sur notre plateforme';
+  const html = `
+    <h2>Bienvenue ${nom}!</h2>
+    <p>Merci de vous être inscrit sur notre plateforme.</p>
+    <p>Nous sommes heureux de vous accueillir.</p>
+  `;
+  return this.sendEmail(email, subject, '', html);
+  };
+
+exports.sendResetPasswordEmail = (email, resetToken) => {
+  const resetLink = `${process.env.APP_URL}/auth/reset-password?token=${resetToken}`;
+  const subject = 'Réinitialisation de votre mot de passe';
+  const html = `
+    <h2>Réinitialisation de mot de passe</h2>
+    <p>Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe:</p>
+    <a href="${resetLink}">${resetLink}</a>
+    <p>Ce lien expire dans 24 heures.</p>
+  `;
+  return this.sendEmail(email, subject, '', html);
+};
+
+exports.sendNotificationEmail = (email, message) => {
+  const subject = 'Notification';
+  const html = `<p>${message}</p>`;
+  return this.sendEmail(email, subject, '', html);
+  };
