@@ -1,0 +1,31 @@
+const adminRoutes = require('./routes/adminRoutes');
+const notificationRoutes = require('./routes/notificationsRoutes');
+const { restrictTo, verifySession } = require('./middlewares/authMiddleware');
+const postRoutes = require("./routes/postRoutes");
+const moduleRoutes = require("./routes/moduleRoutes");
+const sousModuleRoutes = require("./routes/sousModuleRoutes");
+const courRoutes = require("./routes/courRoutes");
+
+const { Module } = require('./models/Module');
+const commentRoutes = require('./routes/comment');
+const destinationRoutes = require('./routes/destinations');
+const guideRoutes = require('./routes/guides');
+const hotelRoutes = require('./routes/hotels');
+const reservationRoutes = require('./routes/reservations');
+const activitesRoutes = require('./routes/activitesRoutes');
+const avisRoutes = require('./routes/avisRoutes');
+const galerieRoutes = require('./routes/galerieRoutes');
+const notificationsRoutes = require('./routes/notificationsRoutes');
+const app = express();
+const http = require('http');
+app.use('/auth', authRoutes);
+app.use('/admin', restrictTo('admin'), adminRoutes); //
+app.use('/admin', restrictTo('admin'), adminRoutes);
+app.use('/api/destinations', destinationRoutes);
+app.use('/api/guides', guideRoutes);
+app.use('/api/hotels', hotelRoutes);
+app.use('/api/reservations', reservationRoutes);
+app.use('/api/activites', activitesRoutes);
+app.use('/api/avis', avisRoutes);
+app.use('/api/galerie', galerieRoutes);
+app.use('/api/notifications', notificationsRoutes);
